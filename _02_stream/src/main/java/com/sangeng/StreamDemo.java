@@ -37,7 +37,7 @@ public class StreamDemo {
 //        test13();
 //        test12();
 //        test11();
-//        test10();
+        test10();
 //        test09();
 //        test08();
 //        test07();
@@ -317,11 +317,30 @@ public class StreamDemo {
     private static void test10() {
 //        打印所有书籍的名字。要求对重复的元素进行去重。
         List<Author> authors = getAuthors();
+        System.out.println(authors);
+
 
         authors.stream()
-                .flatMap(author -> author.getBooks().stream())
-                .distinct()
-                .forEach(book -> System.out.println(book.getName()));
+                .map(author -> author.getBooks())
+                .forEach(books -> System.out.println(books.toString()));
+
+
+
+       authors.stream()
+               .flatMap( author -> author.getBooks().stream())
+               .distinct()
+               .forEach(book ->{
+                   System.out.println(book.getName());
+               });
+
+
+
+
+
+//        authors.stream()
+//                .flatMap(author -> author.getBooks().stream())
+//                .distinct()
+//                .forEach(book -> System.out.println(book.getName()));
 
     }
 
@@ -334,6 +353,12 @@ public class StreamDemo {
                 .sorted()
                 .skip(1)
                 .forEach(author -> System.out.println(author.getName()));
+
+//        authors.stream()
+//                .distinct()
+//                .sorted()
+//                .skip(1)
+//                .forEach(author -> System.out.println(author.getName()));
 
 
     }
@@ -371,12 +396,7 @@ public class StreamDemo {
         List<Author> authors = getAuthors();
 
         authors.stream()
-                .map(new Function<Author, String>() {
-                    @Override
-                    public String apply(Author author) {
-                        return author.getName();
-                    }
-                })
+                .map(author -> author.getName())
                 .forEach(name-> System.out.println(name));
 
 //        authors.stream()
