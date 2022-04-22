@@ -24,7 +24,7 @@ public class StreamDemo {
 //        test26();
 //        test25();
 //        test24();
-//        test23();
+        test23();
 //        test22();
 //        test21();
 //        test20();
@@ -37,7 +37,7 @@ public class StreamDemo {
 //        test13();
 //        test12();
 //        test11();
-        test10();
+//        test10();
 //        test09();
 //        test08();
 //        test07();
@@ -171,6 +171,18 @@ public class StreamDemo {
     private static void test23() {
 //        使用reduce求所有作者年龄的和
         List<Author> authors = getAuthors();
+        Integer reduce = authors.stream()
+                .distinct()
+                .map(author -> author.getAge())
+                .reduce(0, (target, element) -> target + element);
+        System.out.println(reduce);
+//        Integer reduce = authors.stream()
+//                .distinct()
+//                .map(author -> author.getAge())
+//                .reduce(0, (target, element) -> target + element);
+//        System.out.println(reduce);
+
+
         Integer sum = authors.stream()
                 .distinct()
                 .map(author -> author.getAge())
@@ -193,11 +205,17 @@ public class StreamDemo {
     private static void test21() {
 //        获取任意一个年龄大于18的作家，如果存在就输出他的名字
         List<Author> authors = getAuthors();
-        Optional<Author> optionalAuthor = authors.stream()
-                .filter(author -> author.getAge()>18)
+        Optional<Author> any = authors.stream()
+                .filter(author -> author.getAge() > 18)
                 .findAny();
+        any.ifPresent(author-> System.out.println(author.getName()));
 
-        optionalAuthor.ifPresent(author -> System.out.println(author.getName()));
+
+//        Optional<Author> optionalAuthor = authors.stream()
+//                .filter(author -> author.getAge()>18)
+//                .findAny();
+//
+//        optionalAuthor.ifPresent(author -> System.out.println(author.getName()));
     }
 
     private static void test20() {
@@ -206,25 +224,36 @@ public class StreamDemo {
 
         boolean b = authors.stream()
                 .noneMatch(author -> author.getAge() > 100);
-
         System.out.println(b);
+//        boolean b = authors.stream()
+//                .noneMatch(author -> author.getAge() > 100);
+//
+//        System.out.println(b);
 
     }
 
     private static void test19() {
 //        判断是否所有的作家都是成年人
         List<Author> authors = getAuthors();
-        boolean flag = authors.stream()
+        boolean b = authors.stream()
                 .allMatch(author -> author.getAge() >= 18);
-        System.out.println(flag);
+        System.out.println(b);
+
+
+//        boolean flag = authors.stream()
+//                .allMatch(author -> author.getAge() >= 18);
+//        System.out.println(flag);
     }
 
     private static void test18() {
 //        判断是否有年龄在29以上的作家
         List<Author> authors = getAuthors();
-        boolean flag = authors.stream()
+        boolean b = authors.stream()
                 .anyMatch(author -> author.getAge() > 29);
-        System.out.println(flag);
+        System.out.println(b);
+//        boolean flag = authors.stream()
+//                .anyMatch(author -> author.getAge() > 29);
+//        System.out.println(flag);
 
     }
 
@@ -233,30 +262,50 @@ public class StreamDemo {
 //        获取一个Map集合，map的key为作者名，value为List<Book>
         List<Author> authors = getAuthors();
 
-        Map<String, List<Book>> map = authors.stream()
+        Map<String, List<Book>> collect = authors.stream()
                 .distinct()
                 .collect(Collectors.toMap(author -> author.getName(), author -> author.getBooks()));
+        System.out.println(collect);
 
-        System.out.println(map);
+//        Map<String, List<Book>> map = authors.stream()
+//                .distinct()
+//                .collect(Collectors.toMap(author -> author.getName(), author -> author.getBooks()));
+
+//        System.out.println(map);
     }
 
     private static void test16() {
 //        获取一个所有书名的Set集合。
         List<Author> authors = getAuthors();
-        Set<Book> books = authors.stream()
+        Set<String> collect = authors.stream()
+                .distinct()
                 .flatMap(author -> author.getBooks().stream())
+                .map(book -> book.getName())
                 .collect(Collectors.toSet());
+        System.out.println(collect);
 
-        System.out.println(books);
+
+//        Set<Book> books = authors.stream()
+//                .flatMap(author -> author.getBooks().stream())
+//                .collect(Collectors.toSet());
+//
+//        System.out.println(books);
     }
 
     private static void test15() {
 //        获取一个存放所有作者名字的List集合。
         List<Author> authors = getAuthors();
-        List<String> nameList = authors.stream()
+        List<String> collect = authors.stream()
                 .map(author -> author.getName())
+                .distinct()
                 .collect(Collectors.toList());
-        System.out.println(nameList);
+        System.out.println(collect);
+
+
+//        List<String> nameList = authors.stream()
+//                .map(author -> author.getName())
+//                .collect(Collectors.toList());
+//        System.out.println(nameList);
     }
 
 
@@ -265,17 +314,23 @@ public class StreamDemo {
         //Stream<Author>  -> Stream<Book> ->Stream<Integer>  ->求值
 
         List<Author> authors = getAuthors();
-        Optional<Integer> max = authors.stream()
+        Optional<Book> max = authors.stream()
                 .flatMap(author -> author.getBooks().stream())
-                .map(book -> book.getScore())
-                .max((score1, score2) -> score1 - score2);
-
-        Optional<Integer> min = authors.stream()
-                .flatMap(author -> author.getBooks().stream())
-                .map(book -> book.getScore())
-                .min((score1, score2) -> score1 - score2);
+                .distinct()
+                .max((o1, o2) -> o1.getScore() - o2.getScore());
         System.out.println(max.get());
-        System.out.println(min.get());
+
+//        Optional<Integer> max = authors.stream()
+//                .flatMap(author -> author.getBooks().stream())
+//                .map(book -> book.getScore())
+//                .max((score1, score2) -> score1 - score2);
+//
+//        Optional<Integer> min = authors.stream()
+//                .flatMap(author -> author.getBooks().stream())
+//                .map(book -> book.getScore())
+//                .min((score1, score2) -> score1 - score2);
+//        System.out.println(max.get());
+//        System.out.println(min.get());
     }
 
     private static void test13() {
