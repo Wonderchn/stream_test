@@ -374,6 +374,9 @@ public class StreamDemo {
         List<Author> authors = getAuthors();
         System.out.println(authors);
 
+        authors.stream()
+                .map(author -> author.getBooks()
+                ).forEach(books -> System.out.println(books.toString()));
 
         authors.stream()
                 .map(author -> author.getBooks())
